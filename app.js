@@ -4,13 +4,10 @@ const tasks = require('./routes/task_routes')
 const connectDB = require('./db/connect')
 require('dotenv').config()
 const notFound = require('./middleware/notfound')
-const errorHandlerMiddleware = require('./middleware/error_handler')
-
 
 app.use(express.json())
 app.use('/api/v1/tasks', tasks)
 app.use(notFound)
-app.use(errorHandlerMiddleware);
 
 
 const port = process.env.PORT || 3000;
