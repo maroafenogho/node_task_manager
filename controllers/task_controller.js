@@ -1,14 +1,17 @@
-/* eslint-disable linebreak-style */
 /* eslint-disable no-console */
 const Task = require('../models/Task');
 
 const getTasks = async (req, res) => {
-  const mongoTasks = await Task.find({});
-  const newTasks = mongoTasks.map((task) => {
-    const { id, title, completed } = task;
-    return { id, title, completed };
-  });
-  res.status(200).json({ success: true, data: newTasks });
+  try {
+    const mongoTasks = await Task.find({});
+    const newTasks = mongoTasks.map((task) => {
+      const { id, title, completed } = task;
+      return { id, title, completed };
+    });
+    return res.status(200).json({ success: true, data: newTasks });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Something went wrong, please try again' });
+  }
 };
 
 const getSingleTask = async (req, res) => {
