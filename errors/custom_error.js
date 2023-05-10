@@ -1,12 +1,11 @@
+/* eslint-disable linebreak-style */
 class CustomServerError extends Error {
-    constructor(message, statusCode) {
-        super(message)
-        this.statusCode = statusCode
-    }
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+  }
 }
 
-const createCustomError = (message, statusCode) => {
-    return new CustomServerError(message, statusCode)
-}
+const createCustomError = (message, statusCode) => new CustomServerError(message, statusCode);
 
-module.exports = { createCustomError, CustomServerError }
+module.exports = { createCustomError, CustomServerError };
