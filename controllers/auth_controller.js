@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { isError } = require('joi');
 const User = require('../models/User');
-const joiSchema = require('../validators/validators');
+const joiSchema = require('../validators/schemas');
 const verifyToken = require('../middleware/verify_token');
 
 const signUp = async (req, res) => {
@@ -37,7 +37,7 @@ const signUp = async (req, res) => {
       if (error.details[0].path.includes('email')) {
         return res.status(405).json({ success: false, message: 'Email must be valid' });
       }
-      return res.status(405).json({ success: false, message: 'Validation Error. Please check your inputs' });
+      return res.status(405).json({ success: false, message: error });
     }
     return res.status(500).json({ success: false, message: 'There seems to be an error. Please try again later' });
   }
