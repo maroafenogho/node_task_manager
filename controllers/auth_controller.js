@@ -2,7 +2,9 @@
 /* eslint-disable import/no-extraneous-dependencies */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { isError } = require('joi');
 const User = require('../models/User');
+const joiSchema = require('../validators/validators');
 
 const signUp = async (req, res) => {
   const {
@@ -11,6 +13,7 @@ const signUp = async (req, res) => {
   const saltRounds = 10;
 
   try {
+    await joiSchema.validateAsync({ email: req.body.email, password: req.body.password });
     const existingUser = await User.exists({ email });
     if (existingUser) {
       return res.status(406).json({ success: false, message: 'User already exists' });
@@ -26,6 +29,15 @@ const signUp = async (req, res) => {
       data: user,
     });
   } catch (error) {
+    if (isError(error)) {
+      if (error.details[0].path.includes('password')) {
+        return res.status(405).json({ success: false, message: 'Password Malformed' });
+      }
+      if (error.details[0].path.includes('email')) {
+        return res.status(405).json({ success: false, message: 'Email must be valid' });
+      }
+      return res.status(405).json({ success: false, message: 'Validation Error. Please check your inputs' });
+    }
     return res.status(500).json({ success: false, message: 'There seems to be an error. Please try again later' });
   }
 };
@@ -36,7 +48,6 @@ const login = async (req, res) => {
     if (existingUser) {
       const user = existingUser[0];
 
-      console.log(existingUser);
       const passwordsMatch = await bcrypt.compare(req.body.password, user.password);
       if (!passwordsMatch) {
         return res.status(400).json({ success: false, message: 'Incorrect password' });
