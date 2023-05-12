@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const { isError } = require('joi');
 const User = require('../models/User');
 const joiSchema = require('../validators/validators');
+const verifyToken = require('../utils/verify_token');
 
 const signUp = async (req, res) => {
   const {
@@ -65,4 +66,34 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { signUp, login };
+// const checkToken = async (req, res) => {
+
+//   const tokenHeader = req.headers.authorization;
+
+//   if (tokenHeader && tokenHeader.startsWith('Bearer ')) {
+//     const token = tokenHeader.split(' ')[1];
+//     try {
+//       const decodedToken = verifyToken(token);
+//       const user = await User.findById(decodedToken);
+//       return res.status(200).json({ success: true, data: { email: user.email, id: user.id, name: user.name } });
+//     } catch (error) {
+//       return res.status(500).json({ success: false, message: 'Unexpected Error' });
+//     }
+//   }
+//   return res.status(401).json({ success: false, message: 'Unauthorized' });
+// };
+
+const checkToken = async (req, res) => {
+  const userId = verifyToken(req.headers.authorization);
+  if (userId) {
+    try {
+      const user = await User.findById(userId);
+      return res.status(200).json({ success: true, data: { email: user.email, id: user.id, name: user.name } });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: 'Unexpected Error' });
+    }
+  }
+  return res.status(401).json({ success: false, message: 'Unauthorized' });
+};
+
+module.exports = { signUp, login, checkToken };
