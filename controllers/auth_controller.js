@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const { isError } = require('joi');
 const User = require('../models/User');
 const joiSchema = require('../validators/validators');
-const verifyToken = require('../utils/verify_token');
+const verifyToken = require('../middleware/verify_token');
 
 const signUp = async (req, res) => {
   const {

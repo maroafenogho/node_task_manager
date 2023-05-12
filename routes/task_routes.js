@@ -1,4 +1,5 @@
 const express = require('express');
+const verifyToken = require('../middleware/verify_token');
 
 const router = express.Router();
 
@@ -6,11 +7,12 @@ const {
   getTasks, updateTask, createTask, getSingleTask, deleteTask,
 } = require('../controllers/task_controller');
 
-// const { createTask } = require('../controllers/task_controller');
-// const { getSingleTask } = require('../controllers/task_controller');
-// const { deleteTask } = require('../controllers/task_controller');
+// router.use(verifyToken);
 
-router.route('/').get(getTasks).post(createTask);
-router.route('/:id').get(getSingleTask).patch(updateTask).delete(deleteTask);
+router.get('/', verifyToken, getTasks);
+router.get('/:id', verifyToken, getSingleTask);
+router.post('/', verifyToken, createTask);
+router.patch('/:id', verifyToken, updateTask);
+router.delete('/:id', verifyToken, deleteTask);
 
 module.exports = router;
