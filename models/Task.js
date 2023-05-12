@@ -12,6 +12,13 @@ const TaskSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  created_by: {
+    type: String,
+  },
+  created_on: {
+    type: Date,
+    default: Date.now(),
+  },
   details: {
     type: String,
     trim: true,
