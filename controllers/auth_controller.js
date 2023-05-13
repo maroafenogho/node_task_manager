@@ -1,11 +1,9 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable max-len */
 /* eslint-disable import/no-extraneous-dependencies */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { isError } = require('joi');
 const User = require('../models/User');
-const joiSchema = require('../validators/schemas');
-const verifyToken = require('../middleware/verify_token');
 
 const signUp = async (req, res) => {
   const {
@@ -14,7 +12,6 @@ const signUp = async (req, res) => {
   const saltRounds = 10;
 
   try {
-    await joiSchema.validateAsync({ email: req.body.email, password: req.body.password });
     const existingUser = await User.exists({ email });
     if (existingUser) {
       return res.status(406).json({ success: false, message: 'User already exists' });
@@ -30,15 +27,6 @@ const signUp = async (req, res) => {
       data: user,
     });
   } catch (error) {
-    if (isError(error)) {
-      if (error.details[0].path.includes('password')) {
-        return res.status(405).json({ success: false, message: 'Password Malformed' });
-      }
-      if (error.details[0].path.includes('email')) {
-        return res.status(405).json({ success: false, message: 'Email must be valid' });
-      }
-      return res.status(405).json({ success: false, message: error });
-    }
     return res.status(500).json({ success: false, message: 'There seems to be an error. Please try again later' });
   }
 };
@@ -62,38 +50,18 @@ const login = async (req, res) => {
     }
     return res.status(404).json({ success: false, message: 'User not found' });
   } catch (error) {
-    return res.status(500).json({ success: false, message: 'Wahala' });
+    return res.status(500).json({ success: false, message: 'There seems to be an error. Please try again' });
   }
 };
 
-// const checkToken = async (req, res) => {
-
-//   const tokenHeader = req.headers.authorization;
-
-//   if (tokenHeader && tokenHeader.startsWith('Bearer ')) {
-//     const token = tokenHeader.split(' ')[1];
-//     try {
-//       const decodedToken = verifyToken(token);
-//       const user = await User.findById(decodedToken);
-//       return res.status(200).json({ success: true, data: { email: user.email, id: user.id, name: user.name } });
-//     } catch (error) {
-//       return res.status(500).json({ success: false, message: 'Unexpected Error' });
-//     }
-//   }
-//   return res.status(401).json({ success: false, message: 'Unauthorized' });
-// };
-
-const checkToken = async (req, res) => {
-  const userId = verifyToken(req.headers.authorization);
-  if (userId) {
-    try {
-      const user = await User.findById(userId);
-      return res.status(200).json({ success: true, data: { email: user.email, id: user.id, name: user.name } });
-    } catch (error) {
-      return res.status(500).json({ success: false, message: 'Unexpected Error' });
-    }
+const getUserProfile = async (req, res) => {
+  const userId = res.locals.userId;
+  try {
+    const user = await User.findById(userId);
+    return res.status(200).json({ success: true, data: { email: user.email, id: user.id, name: user.name } });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Unexpected Error' });
   }
-  return res.status(401).json({ success: false, message: 'Unauthorized' });
 };
 
-module.exports = { signUp, login, checkToken };
+module.exports = { signUp, login, getUserProfile };

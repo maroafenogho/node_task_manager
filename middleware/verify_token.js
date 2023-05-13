@@ -9,7 +9,8 @@ const verifyToken = (req, res, next) => {
     next();
   } else {
     res.status(401).json({
-      message: 'unauthorised',
+      success: false,
+      message: 'Unathorized Access',
     });
   }
 };
