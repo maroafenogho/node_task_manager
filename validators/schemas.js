@@ -14,4 +14,9 @@ const userSchema = Joi.object({
     .max(30),
 });
 
-module.exports = userSchema;
+const emailSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).required(),
+});
+
+module.exports = { userSchema, emailSchema };

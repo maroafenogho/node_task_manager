@@ -64,4 +64,19 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-module.exports = { signUp, login, getUserProfile };
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User does not exist' });
+    }
+    return res.status(200).json({ success: true, message: 'email sent' });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: 'Unexpected Error' });
+  }
+};
+
+module.exports = {
+  signUp, login, getUserProfile, forgotPassword,
+};
