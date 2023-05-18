@@ -77,6 +77,33 @@ const forgotPassword = async (req, res) => {
   }
 };
 
+const updatePassword = async (req, res) => {
+  const email = req.body.email;
+  const oldPassword = req.body.old_password;
+  const newPassword = req.body.new_password;
+  const confirmPassword = req.body.confirm_password;
+  const saltRounds = 10;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User does not exist' });
+    }
+    const passwordsMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!passwordsMatch) {
+      return res.status(400).json({ success: false, message: 'Incorrect password for provided email address.' });
+    }
+    if (newPassword === confirmPassword) {
+      const hashpass = await bcrypt.hash(newPassword, saltRounds);
+      user.password = hashpass;
+      const newUser = await user.save();
+      return res.status(201).json({ success: true, data: newUser });
+    }
+    return res.status(201).json({ success: true, message: 'Make sure your new passwords match' });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: error });
+  }
+};
+
 module.exports = {
-  signUp, login, getUserProfile, forgotPassword,
+  signUp, login, getUserProfile, forgotPassword, updatePassword,
 };
