@@ -5,8 +5,6 @@ const validateUserSchema = (schema) => async (req, res, next) => {
 
     res.locals.data = value;
 
-    req.decoded = value;
-
     next();
   } catch (err) {
     return res.status(400).json(err);
