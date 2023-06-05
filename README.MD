@@ -29,10 +29,36 @@ The create user route allows you sign users up to the app.
     Method: POST
     URL: http://localhost:3000/api/v1/task_manager/register
 
-    Body
+    Body:
+        {
+            "email": "johndoe2@gmail.com",
+            "password": "Qwerty",
+            "name": "John Doe",
+            "username": "johndoe"
+        }
+    Response:
+    201
+        {
+        "success": true,
+        "token": "eyJhbGciOiJIUzI1NiJ9.NjQ1ZjUxMTI2ZGQzYmIyNDgyYjRhOTUy.Rgpoh6-AiNNognJ-cFbxehSE2rn_wjcc90z4i_NDLDI",
+        "data": {
+            "email": "johndoe2@gmail.com",
+            "password": "$2b$10$bEn56NQYC4mVrn6ZaW1QteYXATOrr7/RI7dzXq/keAbNaP40CHQkm",
+            "username": "johndoe",
+            "name": "John Doe",
+            "created_at": "2023-05-13T08:55:13.416Z",
+            "_id": "645f51126dd3bb2482b4a952",
+            "__v": 0
+        }
+}    
+
+#### Login 
+
+    Method: POST
+    URL: http://localhost:3000/api/v1/task_manager/login
+
+    Body:
     {
-    "email": "johndoe2@gmail.com",
-    "password": "Qwerty",
-    "name": "John Doe",
-    "username": "johndoe"
+        "email": "johndoe2@gmail.com",
+        "password": "Qwerty",
     }
