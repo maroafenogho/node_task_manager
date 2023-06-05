@@ -23,9 +23,8 @@ Create a *.env* file in the root directory of the project, save the mongo URI an
 ## Features
 
 ### Authentication
-- Create user
+#### Create user
 The create user route allows you sign users up to the app. 
-
 
     Method: POST
     URL: http://localhost:3000/api/v1/task_manager/register
@@ -37,4 +36,3 @@ The create user route allows you sign users up to the app.
     "name": "John Doe",
     "username": "johndoe"
     }
-
