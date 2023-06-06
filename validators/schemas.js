@@ -4,7 +4,11 @@ const Joi = require('joi');
 
 const userSchema = Joi.object({
   password: Joi.string()
-    .pattern(new RegExp('^[a-zA-Z0-9]{6,30}$')).required(),
+    .pattern(new RegExp('^[a-zA-Z0-9]{6,30}$'))
+    .required()
+    .messages({
+      'string.pattern.base': 'Password must be at least 6 characters long',
+    }),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'org'] } }).required(),
   name: Joi.string(),

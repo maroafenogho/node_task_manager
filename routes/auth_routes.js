@@ -12,8 +12,9 @@ const {
 router.post('/register', validateUserSchema(userSchema), signUp);
 router.post('/forgot_password', validateUserSchema(emailSchema), forgotPassword);
 router.post('/update_password', updatePassword);
+router.post('/login', validateUserSchema(emailSchema), login);
 // router.route('/register').post(signUp);
-router.route('/login').post(login);
+// router.route('/login').post(login);
 router.get('/get_profile', verifyToken, getUserProfile);
 
 module.exports = router;
