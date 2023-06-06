@@ -98,5 +98,5 @@ To get a user's profile, the token obtained from the login response is sent toge
             }
         }
 
-<strong>*Auth middleware and validators*</strong>
+#### <strong>Auth middleware and validators</strong>
 Before hitting each auth controller, there are validators to check that the data sent contains valid information. Upon passing, the data is sent to the controller and processed accordingly. 
